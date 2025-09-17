@@ -77,18 +77,41 @@ activation yet. (Arguably, `callable?` might be a better name.)
 
 ## Construction
 
-`(new COROUTINE)`
+`(new COROUTINE ARGS...)`
 
-Creates and returns a new instance of the given coroutine that is ready for its
-first activation.
+Creates and returns a new instance of the given coroutine with the specified
+arguments. The arguments are stored with the instance and will be used when
+the coroutine is first activated.
 
-### Example
+If fewer arguments are provided than the coroutine expects, the remaining
+arguments must be provided during the first activation.
+
+### Construction Examples
 
 ```racket
-(define one-to-ten (new iota))
-(one-to-ten 10)
+; Provide all arguments during construction
+(define one-to-ten (new iota 10))
 (while (resumable? one-to-ten)
        (displayln (one-to-ten)))
+```
+
+```racket
+(define (prefix-printer prefix message)
+  (while #t
+    (display prefix)
+    (display ": ")
+    (displayln message)
+    (set! message (yield))))
+(define print-it (new printer))
+(print-it "Hello")
+(print-it "World")
+```
+
+```racket
+; Provide no arguments during construction
+(define print-it (new printer))
+(print-it "Hello")
+(print-it "World")
 ```
 
 ## Activation
@@ -97,11 +120,13 @@ first activation.
 
 Activates the given instance of a coroutine passing the given arguments.
 
-If this is the first activation of the instance, it starts at the beginning
-with the arguments bound to the parameters.
+If this is the first activation of the instance, the arguments are combined
+with any arguments that were stored during instance construction. The combined
+arguments are bound to the routine's parameters, and execution starts at the
+beginning of the routine.
 
-Otherwise, the arguments are returned by the `yield` that suspended the
-instance.
+If this is a resumption (the instance has yielded before), the arguments are
+returned by the `yield` expression that suspended the instance.
 
 ## Quick activation
 

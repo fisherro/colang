@@ -1,0 +1,3 @@
+# Notes
+
+Random and incomplete musings...

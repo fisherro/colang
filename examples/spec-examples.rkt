@@ -15,6 +15,13 @@
          (displayln message)
          (set! message (yield))))
 
+(define (prefix-printer prefix message)
+  (while #t
+    (display prefix)
+    (display ": ")
+    (displayln message)
+    (set! message (yield))))
+
 (define (swapper x y)
   (while #t
     (let-values (((new-x new-y) (yield y x)))
@@ -26,8 +33,7 @@
 (displayln (square 5))
 
 (displayln "==== iota test ====")
-(define one-to-ten (new iota))
-(one-to-ten 10)
+(define one-to-ten (new iota 10))
 (while (resumable? one-to-ten)
        (displayln (one-to-ten)))
 
@@ -35,6 +41,12 @@
 (define print-it (new printer))
 (print-it "Hello")
 (print-it "World")
+
+(displayln "==== prefix-printer test ====")
+(define greet (new prefix-printer "Hello"))
+(greet "World")
+(greet "Universe")
+
 
 (displayln "==== swapper test ====")
 (define swap-it (new swapper))
