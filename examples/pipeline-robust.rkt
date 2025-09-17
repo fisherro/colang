@@ -69,6 +69,41 @@
 ; EXAMPLE 4: Multi-Stage Processing Pipeline
 ; =============================================================================
 
+(define (filter predicate source)
+  ; First activation is initialization, so we don't yield a value.
+  (yield)
+  (while (resumable? source)
+    (let ((result (source)))
+      (when (predicate result)
+        (yield result))))
+  ; Because the last value from source might be odd, we may have to return a
+  ; final placeholder value. We'll use false.
+  #f)
+
+(define (transform function source)
+  ; First activation is initialization, so we don't yield a value.
+  (yield)
+  (while (resumable? source)
+    (yield (function (source))))
+  #f)
+
+(displayln "my-transformed-fibonacci")
+(define (my-transformed-fibonacci offset)
+  (define fg (new fibonacci-generator))
+  (define f (new filter))
+  (define tf (new transform))
+  (define (square-and-add value)
+    (+ offset (* value value)))
+  (define iteration 1)
+  (f even? fg)
+  (tf square-and-add f)
+  (while (< iteration 5)
+    (let ((result (tf)))
+      (when result
+        (set! iteration (+ iteration 1))
+        (displayln result)))))
+(my-transformed-fibonacci 1000)
+
 ; Complex transformation: Fibonacci -> Even -> Square -> Offset
 (define (transformed-fibonacci offset)
   (define source (new fibonacci-generator))
