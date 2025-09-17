@@ -76,12 +76,11 @@
     ; Coroutine finished
     [else #f]))
 
-; Check if coroutine can be resumed
+; Check if coroutine can be called (either fresh or suspended)
 (define (resumable? instance)
   (and (coroutine-instance? instance)
-       (coroutine-instance-active? instance)
-       (coroutine-instance-cont instance)
-       #t))
+       (or (not (coroutine-instance-active? instance))  ; Fresh instance
+           (coroutine-instance-cont instance))))
 
 ; Simple while loop
 (define-syntax while

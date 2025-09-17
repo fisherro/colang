@@ -72,6 +72,9 @@ resumes, this expression returns the values passed to the next activation.
 
 Returns `#t` if the given instance is resumable; `#f` otherwise.
 
+Note that `resumable?` returns true even if the routine hasn't had its first
+activation yet. (Arguably, `callable?` might be a better name.)
+
 ## Construction
 
 `(new COROUTINE)`
