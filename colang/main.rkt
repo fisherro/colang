@@ -45,13 +45,13 @@
     [(_ coroutine-func)
      (coroutine-instance 'coroutine-func '() #f #f)]))
 
-; Yield single value and capture continuation
-(define (yield value)
+; Yield zero or more values and capture continuation
+(define (yield . vals)
   (control k
     (let ([cor (current-coroutine)])
       (when cor
         (set-coroutine-instance-cont! cor k))
-      value)))
+      (apply values vals))))
 
 ; Activate a coroutine instance
 (define (activate-coroutine instance . args)

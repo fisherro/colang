@@ -7,6 +7,13 @@ Built using Racket.
 Eventually, I plan to transition to a more EcmaScript-style syntax. For now,
 however, I'm using S-expressions.
 
+## Spec notation
+
+In this spec...
+
+* All upper-case identifiers represent a placeholder
+* Identifiers followed by `...` means "zero or more"
+
 ## Defining routines
 
 `(define (NAME PARAMS...) BODY)`
