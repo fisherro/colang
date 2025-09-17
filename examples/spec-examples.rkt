@@ -16,10 +16,11 @@
          (set! message (yield))))
 
 (define (swapper x y)
-  (let-values (((new-x new-y) (yield y x)))
-    (set! x new-x)
-    (set! y new-y)
-    (values x y)))
+  (while #t
+    (let-values (((new-x new-y) (yield y x)))
+        (set! x new-x)
+        (set! y new-y)
+        (values x y))))
 
 (displayln "==== square test ====")
 (displayln (square 5))

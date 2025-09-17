@@ -52,9 +52,11 @@ Routines are lexically scoped and close over their lexical environment.
 
 ```racket
 (define (swapper x y)
-  (let-values (((new-x new-y) (yield y x)))
-    (set! x new-x)
-    (set! y new-y)))
+  (while #t
+    (let-values (((new-x new-y) (yield y x)))
+        (set! x new-x)
+        (set! y new-y)
+        (values x y))))
 ```
 
 ## Yield
