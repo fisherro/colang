@@ -29,10 +29,11 @@ Routines are lexically scoped and close over their lexical environment.
 
 ```racket
 (define (iota n)
-  (define i 0)
+  (define i 1)
   (while (< i n)
          (yield i)
-         (set! i (+ i 1))))
+         (set! i (+ i 1)))
+  n)
 ```
 
 ```racket
@@ -72,10 +73,10 @@ first activation.
 ### Example
 
 ```racket
-(define zero-to-nine (new iota))
-(iota 10)
-(while (resumable? zero-to-nine)
-       (displayln (zero-to-nine)))
+(define one-to-ten (new iota))
+(one-to-ten 10)
+(while (resumable? one-to-ten)
+       (displayln (one-to-ten)))
 ```
 
 ## Activation

@@ -4,10 +4,11 @@
   (* x x))
 
 (define (iota n)
-  (define i 0)
+  (define i 1)
   (while (< i n)
          (yield i)
-         (set! i (+ i 1))))
+         (set! i (+ i 1)))
+  n)
 
 (define (printer message)
   (while #t
@@ -23,10 +24,10 @@
 (displayln (square 5))
 
 (displayln "==== iota test ====")
-(define zero-to-nine (new iota))
-(iota 10)
-(while (resumable? zero-to-nine)
-       (displayln (zero-to-nine)))
+(define one-to-ten (new iota))
+(one-to-ten 10)
+(while (resumable? one-to-ten)
+       (displayln (one-to-ten)))
 
 (displayln "==== printer test ====")
 (define print-it (new printer))
