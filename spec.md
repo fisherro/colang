@@ -151,6 +151,12 @@ named routines and anonymous routines.
 Note that if the routine yields, then, when using quick activation, it will
 return the first value yielded and never run to completion.
 
+## Routine predicate
+
+`(routine? ROUTINE)`
+
+Returns true if the argument is a routine; otherwise, false.
+
 ## Scheduling
 
 There is no scheduling logic. Routines pass control directly between each other

@@ -5,7 +5,7 @@
          (except-out (all-from-out racket) define #%app #%module-begin)
          (rename-out [colang-define define]
                      [colang-app #%app])
-         yield resumable? while set! new routine)
+         yield resumable? while set! new routine routine?)
 
 ; Coroutine instance structure
 (struct coroutine-instance (func args cont active?) 
@@ -87,6 +87,10 @@
   (and (coroutine-instance? instance)
        (or (not (coroutine-instance-active? instance))  ; Fresh instance
            (coroutine-instance-cont instance))))
+
+; Check if value is a routine
+(define (routine? value)
+  (routine-wrapper? value))
 
 ; Simple while loop
 (define-syntax while
