@@ -4,7 +4,7 @@
 ; ROUTINES TO TEST
 ; ================
 
-(define (fibonacci-generator)
+(routine fibonacci-generator ()
   (define a 0)
   (define b 1)
   (while #t
@@ -13,26 +13,26 @@
     (set! a b)
     (set! b next)))
 
-(define (take n source)
+(routine take (n source)
   (define i 0)
   (while (and (< i n)
               (resumable? source))
     (yield (source))
     (set! i (+ i 1))))
 
-(define (for-each function source)
+(routine for-each (function source)
   (while (resumable? source)
     (let ((datum (source)))
       (unless (void? datum)
         (function datum)))))
 
-(define (filter predicate generator)
+(routine filter (predicate generator)
   (while (resumable? generator)
     (let ((result (generator)))
       (when (predicate result)
         (yield result)))))
 
-(define (transform function source)
+(routine transform (function source)
   (while (resumable? source)
     (yield (function (source)))))
 
@@ -45,7 +45,7 @@
 ; GENERATOR TEST
 ; ==============
 
-(define (generator-test)
+(routine generator-test ()
   (displayln "=== GENERATOR TEST ===")
   (define fib (new fibonacci-generator))
   (define i 0)
@@ -62,7 +62,7 @@
 ; TAKE TEST
 ; =========
 
-(define (take-test)
+(routine take-test ()
   (displayln "=== TAKE TEST ===")
   (define fib (new fibonacci-generator))
   (define first10 (new take 10 fib))
@@ -76,7 +76,7 @@
 ; FOR-EACH TEST
 ; =============
 
-(define (for-each-test)
+(routine for-each-test ()
   (displayln "=== FOR-EACH TEST ===")
   (define fib (new fibonacci-generator))
   (define first10 (new take 10 fib))
@@ -88,7 +88,7 @@
 ; FILTER TEST
 ; ===========
 
-(define (filter-test)
+(routine filter-test ()
   (displayln "=== FILTER TEST ===")
   (define fib (new fibonacci-generator))
   (define evens (new filter even? fib))
@@ -104,9 +104,9 @@
 ; TRANSFORM TEST
 ; ==============
 
-(define (transform-test)
+(routine transform-test ()
   (displayln "=== SQUARE FIBONACCI TEST ===")
-  (define (square n)
+  (routine square (n)
     (* n n))
   (define fib (new fibonacci-generator))
   (define transformer (new transform square fib))
@@ -122,9 +122,9 @@
 ; FILTER-TRANSFORM TEST
 ; =====================
 
-(define (filter-transform-test)
+(routine filter-transform-test ()
   (displayln "=== FILTER-TRANSFORM TEST ===")
-  (define (square n)
+  (routine square (n)
     (* n n))
   (define fib (new fibonacci-generator))
   (define evens (new filter even? fib))
@@ -142,7 +142,7 @@
 ; =============
 
 ; Simple primality test
-(define (prime? n)
+(routine prime? (n)
   (cond
     [(< n 2) #f]
     [(= n 2) #t]
@@ -155,7 +155,7 @@
        (set! factor (+ factor 1)))
      is-prime]))
 
-(define (prime-test)
+(routine prime-test ()
   (displayln "=== PRIME NUMBERS ===")
   (define fib (new fibonacci-generator))
   (define evens (new filter prime? fib))
