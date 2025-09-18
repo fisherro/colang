@@ -2,9 +2,10 @@
 (require racket/control)
 
 (provide (rename-out [colang-module-begin #%module-begin])
-         (except-out (all-from-out racket) define #%app #%module-begin)
+         (except-out (all-from-out racket) define #%app #%module-begin lambda)
          (rename-out [colang-define define]
-                     [colang-app #%app])
+                     [colang-app #%app]
+                     [colang-lambda lambda])
          yield resumable? while set! new routine routine?)
 
 ; Coroutine instance structure
@@ -18,11 +19,21 @@
 ; Current coroutine parameter
 (define current-coroutine (make-parameter #f))
 
+; Block lambda expressions
+(define-syntax colang-lambda
+  (lambda (stx)
+    (raise-syntax-error 'lambda "Lambda expressions not allowed in Colang. Use (routine (params...) body...) instead." stx)))
+
 ; Transform define to handle only variable definitions
 (define-syntax colang-define
-  (syntax-rules ()
-    [(_ name value)
-     (define name value)]))
+  (lambda (stx)
+    (syntax-case stx ()
+      ; Reject function definition syntax
+      [(_ (name params ...) body ...)
+       (raise-syntax-error 'define "Function definitions not allowed in Colang. Use (routine name (params...) body...) instead." stx)]
+      ; Allow value definitions
+      [(_ name value)
+       #'(define name value)])))
 
 ; Routine wrapper structure to support both quick activation and new
 (struct routine-wrapper (func)

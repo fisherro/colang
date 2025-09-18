@@ -48,12 +48,6 @@ We need an actual, automated test suite.
     (yield (source))))
 ```
 
-## Routine definition
-
-Now that we have implemented the `routine` form for defining routines...
-
-We need to prevent the creation of normal Racket procedures with `define` or `lambda`.
-
 ## Abort?
 
 In the case where a coroutine doesn't know whether it is going to be able to supply a value until it is actually resumed...
