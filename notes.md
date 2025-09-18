@@ -2,6 +2,10 @@
 
 Random and incomplete musings...
 
+## Tests
+
+We need an actual, automated test suite.
+
 ## Pipeline examples additions
 
 ### Pipeline builder
