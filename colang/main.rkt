@@ -24,9 +24,19 @@
     [(_ name value)
      (define name value)]))
 
+; Routine wrapper structure to support both quick activation and new
+(struct routine-wrapper (func)
+  #:property prop:procedure
+  (lambda (self . args)
+    ; Quick activation: create temp instance and activate
+    (let ([temp-instance (coroutine-instance (routine-wrapper-func self) args #f #f)])
+      (activate-coroutine temp-instance))))
+
 ; Create new coroutine instance with parameters
-(define (new coroutine-func . args)
-  (coroutine-instance coroutine-func args #f #f))
+(define (new routine-wrapper . args)
+  (if (routine-wrapper? routine-wrapper)
+      (coroutine-instance (routine-wrapper-func routine-wrapper) args #f #f)
+      (error "Not a routine" routine-wrapper)))
 
 ; Create anonymous routine and shorthand syntax  
 (define-syntax routine
@@ -35,10 +45,10 @@
       ; Shorthand definition form: (routine NAME (PARAM...) BODY...)
       [(_ name (params ...) body ...)
        (identifier? #'name)
-       #'(define name (lambda (params ...) body ...))]
+       #'(define name (routine-wrapper (lambda (params ...) body ...)))]
       ; Anonymous form: (routine (PARAM...) BODY...)
       [(_ (params ...) body ...)
-       #'(lambda (params ...) body ...)])))
+       #'(routine-wrapper (lambda (params ...) body ...))])))
 
 ; Yield zero or more values and capture continuation
 (define (yield . vals)
