@@ -24,7 +24,7 @@ Colang provides three ways to define routines:
 
 Creates an anonymous coroutine that takes the given parameters and has the given body. Returns a procedure that can be called directly or used with `new`.
 
-**Note**: Due to implementation limitations, anonymous routines cannot be used in all expression contexts. They work best when assigned to variables immediately or used in simple expressions.
+**Note**: Due to implementation limitations, anonymous routines cannot be used in all expression contexts. They work best when assigned to variables immediately or used in simple expressions. **The implementation has changed, so this statement needs to be reëavluated.**
 
 ### Explicit definition
 
@@ -32,7 +32,7 @@ Creates an anonymous coroutine that takes the given parameters and has the given
 
 Defines a named coroutine by binding an anonymous routine to a variable.
 
-**Note**: Due to current implementation limitations, this form may not work in all contexts. The shorthand form is recommended for most use cases.
+**Note**: Due to current implementation limitations, this form may not work in all contexts. The shorthand form is recommended for most use cases. **The implementation has changed, so this statement needs to be reëavluated.**
 
 ### Shorthand definition
 
@@ -151,6 +151,9 @@ This is equivalent to...
 A new, temporary instance of the routine need not actually be created, but
 the behavior should be the same as if it had been. This works with both
 named routines and anonymous routines.
+
+Note that if the routine yields, then, when using quick activation, it will
+return the first value yielded and never run to completion.
 
 ## Scheduling
 
