@@ -2,14 +2,14 @@
 
 ; Comprehensive test of the new parameter passing system
 
-(define (test-params a b c)
+(define test-params (routine (a b c)
   (displayln (string-append "Parameters: a=" (number->string a) 
                            " b=" (number->string b) 
                            " c=" (number->string c)))
   (yield (+ a b c))
   (define resume-value (yield (* a b c)))
   (displayln (string-append "Resume value: " (number->string resume-value)))
-  (+ a b c resume-value))
+  (+ a b c resume-value)))
 
 (displayln "=== Comprehensive Parameter Passing Test ===")
 (displayln "")
@@ -45,11 +45,11 @@
 
 ; Test 5: Pipeline composition with new parameter system
 (displayln "Test 5: Pipeline composition")
-(define (generator start count)
+(define generator (routine (start count)
   (define i 0)
   (while (< i count)
     (yield (+ start i))
-    (set! i (+ i 1))))
+    (set! i (+ i 1)))))
 
 ; Create a simple manual pipeline test instead
 (define gen (new generator 10 5))

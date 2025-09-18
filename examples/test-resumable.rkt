@@ -1,10 +1,10 @@
 #lang colang
 
-(define (test-coroutine n)
+(define test-coroutine (routine (n)
   (displayln "Started")
   (yield n)
   (displayln "Resumed")
-  "done")
+  "done"))
 
 (displayln "=== Testing resumable? behavior ===")
 

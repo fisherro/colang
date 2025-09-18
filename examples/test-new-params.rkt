@@ -1,11 +1,11 @@
 #lang colang
 
 ; Simple test with the new parameter passing
-(define (test-params x y)
+(define test-params (routine (x y)
   (displayln (string-append "Started with x=" (number->string x) " y=" (number->string y)))
   (yield (+ x y))
   (displayln "Resumed")
-  (* x y))
+  (* x y)))
 
 (displayln "=== Testing new parameter passing ===")
 

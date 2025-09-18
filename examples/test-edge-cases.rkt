@@ -1,11 +1,11 @@
 #lang colang
 
 ; Test resume with arguments (should pass to yield)
-(define (test-resume-args initial)
+(define test-resume-args (routine (initial)
   (displayln (string-append "Started with: " (number->string initial)))
   (define resume-value (yield initial))
   (displayln (string-append "Resumed with: " (number->string resume-value)))
-  (+ initial resume-value))
+  (+ initial resume-value)))
 
 (displayln "=== Testing resume arguments ===")
 (define test-instance (new test-resume-args 10))
@@ -15,10 +15,10 @@
 (displayln (test-instance 20))
 
 ; Test multiple parameters
-(define (test-multiple a b c)
+(define test-multiple (routine (a b c)
   (displayln (string-append "a=" (number->string a) " b=" (number->string b) " c=" (number->string c)))
   (yield (+ a b c))
-  (* a b c))
+  (* a b c)))
 
 (displayln "")
 (displayln "=== Testing multiple parameters ===")

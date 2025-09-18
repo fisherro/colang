@@ -16,13 +16,32 @@ In this spec...
 
 ## Defining routines
 
-`(define (NAME PARAMS...) BODY)`
+Colang provides three ways to define routines:
 
-Defines a coroutine named `NAME` that takes the given parameters and has given
-body.
+### Anonymous routine
+
+`(routine (PARAMS...) BODY)`
+
+Creates an anonymous coroutine that takes the given parameters and has the given body. Returns a procedure that can be called directly or used with `new`.
+
+**Note**: Due to implementation limitations, anonymous routines cannot be used in all expression contexts. They work best when assigned to variables immediately or used in simple expressions.
+
+### Explicit definition
+
+`(define NAME (routine (PARAMS...) BODY))`
+
+Defines a named coroutine by binding an anonymous routine to a variable.
+
+**Note**: Due to current implementation limitations, this form may not work in all contexts. The shorthand form is recommended for most use cases.
+
+### Shorthand definition
+
+`(routine NAME (PARAMS...) BODY)`
+
+Shorthand for defining a named coroutine. This is the recommended syntax for defining named routines as it works in all contexts.
 
 The value of the last expression in `BODY` is the return value of the routine.
-(In the future we have have an explicit `return` statement instead.) A routine
+(In the future we may have an explicit `return` statement instead.) A routine
 may return multiple values.
 
 Routines are lexically scoped and close over their lexical environment.
@@ -30,12 +49,14 @@ Routines are lexically scoped and close over their lexical environment.
 ### Examples
 
 ```racket
-(define (square x)
+; Shorthand definition (recommended)
+(routine square (x)
   (* x x))
 ```
 
 ```racket
-(define (iota n)
+; Shorthand definition
+(routine iota (n)
   (define i 1)
   (while (< i n)
          (yield i)
@@ -44,14 +65,16 @@ Routines are lexically scoped and close over their lexical environment.
 ```
 
 ```racket
-(define (printer message)
+; Shorthand definition with yield
+(routine printer (message)
   (while #t
          (displayln message)
          (set! message (yield))))
 ```
 
 ```racket
-(define (swapper x y)
+; Shorthand definition
+(routine swapper (x y)
   (while #t
     (let-values (((new-x new-y) (yield y x)))
         (set! x new-x)
@@ -77,10 +100,11 @@ activation yet. (Arguably, `callable?` might be a better name.)
 
 ## Construction
 
-`(new COROUTINE ARGS...)`
+`(new ROUTINE ARGS...)`
 
-Creates and returns a new instance of the given coroutine with the specified
-arguments. The arguments are stored with the instance and will be used when
+Creates and returns a new instance of the given routine with the specified
+arguments. The routine can be either a named routine or an anonymous routine.
+The arguments are stored with the instance and will be used when
 the coroutine is first activated.
 
 If fewer arguments are provided than the coroutine expects, the remaining
@@ -93,18 +117,6 @@ arguments must be provided during the first activation.
 (define one-to-ten (new iota 10))
 (while (resumable? one-to-ten)
        (displayln (one-to-ten)))
-```
-
-```racket
-(define (prefix-printer prefix message)
-  (while #t
-    (display prefix)
-    (display ": ")
-    (displayln message)
-    (set! message (yield))))
-(define print-it (new printer))
-(print-it "Hello")
-(print-it "World")
 ```
 
 ```racket
@@ -130,14 +142,15 @@ returned by the `yield` expression that suspended the instance.
 
 ## Quick activation
 
-`(COROUTINE ARGS...)`
+`(ROUTINE ARGS...)`
 
 This is equivalent to...
 
-`((new COROUTINE) ARGS...)`
+`((new ROUTINE) ARGS...)`
 
-A new, temporary instance of the coroutine need not actually be created, but
-the behavior should be the same as if it had been.
+A new, temporary instance of the routine need not actually be created, but
+the behavior should be the same as if it had been. This works with both
+named routines and anonymous routines.
 
 ## Scheduling
 
@@ -150,3 +163,26 @@ through activations and yielding.
 * Error handling
 * What happens when a finished instance is activated?
 * Lifecycle: Any finalizing opportunity for coroutines?
+
+## Syntax Evolution
+
+### Current S-expression syntax
+
+The current syntax uses three forms for routine definition:
+
+* `(routine (PARAMS...) BODY)` - Anonymous routine
+* `(define NAME (routine (PARAMS...) BODY))` - Explicit definition  
+* `(routine NAME (PARAMS...) BODY)` - Shorthand definition
+
+### Future EcmaScript-style syntax
+
+Eventually, the language will transition to a more familiar syntax:
+
+* `routine(PARAMS...) { BODY }` - Anonymous routine
+* `define NAME = routine(PARAMS...) { BODY }` - Explicit definition
+* `routine NAME(PARAMS...) { BODY }` - Shorthand definition
+
+### Deprecated syntax
+
+The old `(define (NAME PARAMS...) BODY)` syntax is no longer supported for
+creating coroutines. It now creates regular Racket functions instead.

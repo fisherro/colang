@@ -46,32 +46,9 @@ Random and incomplete musings...
 
 ## Routine definition
 
-Currently, we use `(define (NAME PARAM...) BODY)` to define routines. We have no support for anonymous routines.
+Now that we have implemented the `routine` form for defining routines...
 
-We should disconnect `define` and creating a routine.
-
-```racket
-; Create an anonymous routine:
-(routine (PARAM...) BODY)
-
-; Define a routine:
-(define (routine (PARAM...) BODY))
-
-; Shorthand
-(routine NAME (PARAM...) BODY)
-```
-
-The `(define (NAME PARAM...) BODY)` syntax would be removed, but `define` itself would remain as the generic variable definition syntax.
-
-At some point, I'd like to change to a more Algol-/EcmaScript-style syntax. Then, these constructs might look like:
-
-```EcmaScript
-routine(PARAM...) { BODY }
-
-define NAME = routine(PARAM...) { BODY }
-
-routine NAME(PARAM...) { BODY }
-```
+We need to prevent the creation of normal Racket procedures with `define` or `lambda`.
 
 ## Abort?
 
