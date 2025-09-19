@@ -12,7 +12,12 @@
     ("Yield and Coroutines" "yield-coroutine-suite.rkt")
     ("Construction and Activation" "construction-activation-suite.rkt")
     ("Predicates" "predicates-suite.rkt")
-    ("Integration Tests" "integration-suite.rkt")))
+    ("Integration Tests" "integration-suite.rkt")
+    ("Error Handling" "error-handling-suite.rkt")
+    ("Parameter Passing" "parameter-passing-suite.rkt")
+    ("Multiple Values" "multiple-values-suite.rkt")
+    ("Anonymous Edge Cases" "anonymous-edge-cases-suite.rkt")
+    ("Resume Arguments" "resume-arguments-suite.rkt")))
 
 ;; Function to run a single test file
 (define (run-test-file name filename)
