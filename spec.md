@@ -162,6 +162,12 @@ Returns true if the argument is a routine; otherwise, false.
 There is no scheduling logic. Routines pass control directly between each other
 through activations and yielding.
 
+## Note about inherited Racket functionality
+
+To speed development, we currently directly inherit much from Racket. Do not assume that everything we inherit from Racket is implicitly part of the this specification. They're just a temporary convenience to aid development.
+
+Note in particular that Colang blocks the normal Racket procedure definition, via `define` or `lambda`. Because all procedures defined in Colang should be coroutines.
+
 ## Topics to cover in the future
 
 * Destructing assignment
